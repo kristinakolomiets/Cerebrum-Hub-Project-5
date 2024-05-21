@@ -85,5 +85,6 @@ describe('Issue create', () => {
       // Assert that correct error message is visible
       cy.get('[data-testid="form-field:title"]').should('contain', 'This field is required');
     });
+    //assigment 1 test passed
   });
 });
