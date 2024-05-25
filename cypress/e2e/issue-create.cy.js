@@ -14,7 +14,7 @@ describe('Issue create', () => {
       });
   });
 
-  it.skip('Should create an issue and validate it successfully', () => {
+  it('Should create an issue and validate it successfully', () => {
     // System finds modal for creating issue and does next steps inside of it
     cy.get('[data-testid="modal:issue-create"]').within(() => {
       // Type value to description input field
@@ -81,7 +81,7 @@ describe('Issue create', () => {
       });
   });
 
-  it.skip('Should validate title is required field if missing', () => {
+  it('Should validate title is required field if missing', () => {
     // System finds modal for creating issue and does next steps inside of it
     cy.get('[data-testid="modal:issue-create"]').within(() => {
       // Try to click create issue button without filling any data
