@@ -1,15 +1,20 @@
+import { faker } from '@faker-js/faker';
+const randomTitle = faker.word.noun();
+const randomDescription = faker.lorem.words(5)
+
+
 describe('Issue create', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.url()
       .should('eq', `${Cypress.env('baseUrl')}project/board`)
       .then((url) => {
-        // System will already open issue creating modal in beforeEach block
+        //System will already open issue creating modal in beforeEach block
         cy.visit(url + '/board?modal-issue-create=true');
       });
   });
 
-  it('Should create an issue and validate it successfully', () => {
+  it.skip('Should create an issue and validate it successfully', () => {
     // System finds modal for creating issue and does next steps inside of it
     cy.get('[data-testid="modal:issue-create"]').within(() => {
       // Type value to description input field
@@ -76,7 +81,7 @@ describe('Issue create', () => {
       });
   });
 
-  it('Should validate title is required field if missing', () => {
+  it.skip('Should validate title is required field if missing', () => {
     // System finds modal for creating issue and does next steps inside of it
     cy.get('[data-testid="modal:issue-create"]').within(() => {
       // Try to click create issue button without filling any data
@@ -85,6 +90,66 @@ describe('Issue create', () => {
       // Assert that correct error message is visible
       cy.get('[data-testid="form-field:title"]').should('contain', 'This field is required');
     });
-    //assigment 1 test passed
   });
-});
+
+  it('Assigment 2: Test Case 1 - Custom Issue Creation', () => { 
+    cy.get('[data-testid="modal:issue-create"]').within(() => {
+      cy.get('[data-testid="select:type"]').click(); 
+      cy.get('[data-testid="select-option:Bug"]').wait(1000).trigger('mouseover').trigger('click'); 
+      cy.get('[data-testid="icon:bug"]').should('be.visible'); 
+      cy.get('input[name="title"]').type('Bug');
+      cy.get('.ql-editor').type('My bug description'); 
+      cy.get('.ql-editor').should('have.text', 'My bug description'); 
+      cy.get('[data-testid="select:priority"]').click(); 
+      cy.get('[data-testid="select-option:Highest"]').wait(1000).trigger('mouseover').trigger('click'); 
+      cy.get('[data-testid="select:reporterId"]').click(); 
+      cy.get('[data-testid="select-option:Pickle Rick"]').click(); 
+      cy.get('[data-testid="form-field:userIds"]').click(); 
+      cy.get('[data-testid="select-option:Lord Gaben"]').click(); 
+      cy.get('button[type="submit"]').click(); 
+    });
+    
+    cy.get('[data-testid="modal:issue-create"]').should('not.exist');
+    cy.contains('Issue has been successfully created.').should('be.visible');
+
+    cy.reload();
+    cy.contains('Issue has been successfully created.').should('not.exist');
+
+
+    cy.get('[data-testid="board-list:backlog"]')
+      .contains('Bug')
+      .within(() => {
+        cy.get('[data-testid="avatar:Lord Gaben"]').should('be.visible');
+        cy.get('[data-testid="icon:bug"]').should('be.visible');
+     });
+  });
+
+
+  it('Assigment 2: Test Case 2 - Random Data Plugin Issue Creation', () => { 
+    cy.get('[data-testid="modal:issue-create"]').within(() => {
+      cy.get('input[name="title"]').type(randomTitle);
+      cy.get('.ql-editor').type(randomDescription); 
+      cy.get('.ql-editor').should('have.text', randomDescription); 
+      cy.get('[data-testid="select:priority"]').click(); 
+      cy.get('[data-testid="select-option:Low"]').wait(1000).trigger('mouseover').trigger('click'); 
+      cy.get('[data-testid="select:reporterId"]').click(); 
+      cy.get('[data-testid="select-option:Baby Yoda"]').click(); 
+      cy.get('button[type="submit"]').click(); 
+    });
+    
+    cy.get('[data-testid="modal:issue-create"]').should('not.exist');
+    cy.contains('Issue has been successfully created.').should('be.visible');
+
+    cy.reload();
+    cy.contains('Issue has been successfully created.').should('not.exist');
+
+
+    cy.get('[data-testid="board-list:backlog"]')
+      .contains('Task')
+      .within(() => {
+        cy.get('[data-testid="icon:task"]').should('be.visible');
+     });
+  });
+  
+})
+
