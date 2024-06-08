@@ -34,7 +34,7 @@ class TimeTracking {
   editDescription(description) {
     cy.get(this.descriptionField).type(description);
   }
-
+  //Need create an issue due to the fact, that existing issues has already logged timing
   createIssue(issueDetails) {
     this.getIssueModal().within(() => {
       this.editTitle(issueDetails.title);
@@ -47,7 +47,6 @@ class TimeTracking {
     cy.get(this.issueModal).should("not.exist");
     cy.reload();
     cy.contains(this.issueCreated).should("not.exist");
-
     cy.get(this.backlogList)
       .should("be.visible")
       .and("have.length", "1")
@@ -59,7 +58,7 @@ class TimeTracking {
           .contains(issueDetails.title);
       });
   }
-
+  //Time Estimation Functionality
   addNewTime(estimation, title) {
     cy.get(this.backlogList)
       .contains(title)
@@ -112,7 +111,7 @@ class TimeTracking {
       cy.contains(this.noTime).should("exist");
     });
   }
-
+  //Time Logging Functionality
   logTimeModal(spentTime, remainingTime) {
     cy.get(this.issueDetailModal).within(() => {
       cy.contains(this.noTime).should("exist");
