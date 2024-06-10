@@ -34,7 +34,7 @@ class TimeTracking {
   editDescription(description) {
     cy.get(this.descriptionField).type(description);
   }
-  //Need create an issue due to the fact, that existing issues has already logged timing
+  //This method creates a new issue for time tracking functionality check by adding Title and Description. Issue type, Reporter and Priority are set by default.
   createIssue(issueDetails) {
     this.getIssueModal().within(() => {
       this.editTitle(issueDetails.title);
@@ -42,7 +42,7 @@ class TimeTracking {
       cy.get(this.submitButton).click();
     });
   }
-
+  //This method checks if the new created issue is visible in the Backlog column
   ensureIssueIsCreated(expectedAmountIssues, issueDetails) {
     cy.get(this.issueModal).should("not.exist");
     cy.reload();
@@ -58,7 +58,7 @@ class TimeTracking {
           .contains(issueDetails.title);
       });
   }
-  //Time Estimation Functionality
+  //This method adds estimation time to the previously created issue
   addNewTime(estimation, title) {
     cy.get(this.backlogList)
       .contains(title)
@@ -71,7 +71,7 @@ class TimeTracking {
       cy.get(this.closeDetailModalButton).click();
     });
   }
-
+  //This method checks if the added estimation time remains when reopen the detailed view of the issue
   ensureNewTimeWasAdded(estimation, title) {
     cy.reload();
     cy.get(this.backlogList).contains(title).click({ force: true });
@@ -79,7 +79,7 @@ class TimeTracking {
       cy.get(this.inputNumber).should("have.value", estimation);
     });
   }
-
+  //This method edits the estimation time to another estimation time
   editTime(estimation2, title) {
     cy.get(this.backlogList).contains(title).click({ force: true });
     cy.get(this.issueDetailModal).within(() => {
@@ -87,7 +87,7 @@ class TimeTracking {
       cy.get(this.closeDetailModalButton).click();
     });
   }
-
+  //This method checks if the updated estimation time remains when reopen the detailed view of the issue
   ensureEditedTimeWasAdded(estimation2, title) {
     cy.reload();
     cy.get(this.backlogList).contains(title).click({ force: true });
@@ -95,7 +95,7 @@ class TimeTracking {
       cy.get(this.inputNumber).should("have.value", estimation2);
     });
   }
-
+  //This method removes the estimation time
   deleteTimeEstimation(title) {
     cy.get(this.backlogList).contains(title).click({ force: true });
     cy.get(this.issueDetailModal).within(() => {
@@ -103,7 +103,7 @@ class TimeTracking {
       cy.get(this.closeDetailModalButton).click();
     });
   }
-
+  //This methods checks if the estimation time was removed and the user sees "No time logged" information in the detailed view of the issue
   ensureTimeWasRemoved(title) {
     cy.reload();
     cy.get(this.backlogList).contains(title).click({ force: true });
@@ -111,7 +111,7 @@ class TimeTracking {
       cy.contains(this.noTime).should("exist");
     });
   }
-  //Time Logging Functionality
+  //This method registers spent and remaining time to the previously created issue
   logTimeModal(spentTime, remainingTime) {
     cy.get(this.issueDetailModal).within(() => {
       cy.contains(this.noTime).should("exist");
@@ -131,7 +131,7 @@ class TimeTracking {
       cy.get(this.closeDetailModalButton).click();
     });
   }
-
+  //This method checks if the previously logged spent and remaining time remain when reopen the detailed view of the issue
   ensureTimeWasLogged(spentTime, remainingTime, title) {
     cy.reload();
     cy.get(this.backlogList).contains(title).click({ force: true });
@@ -140,7 +140,7 @@ class TimeTracking {
       cy.contains(`${remainingTime}h remaining`).should("be.visible");
     });
   }
-
+  //This method removes previously added spent and remaining time
   removeLoggedTime() {
     cy.get(this.issueDetailModal).within(() => {
       cy.get(this.stopWatch).click();
@@ -156,7 +156,7 @@ class TimeTracking {
       cy.get(this.closeDetailModalButton).click();
     });
   }
-
+  //This method checks if removed spent and remaining time don't exist anymore but "No time logged" information is visible when reopen the detailed view of the issue
   ensureLoggedTimeRemoved(title) {
     cy.reload();
     cy.get(this.backlogList).contains(title).click({ force: true });
